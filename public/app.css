@@ -1,0 +1,38 @@
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    font-family: sans-serif;
+    color: #333;
+    position: relative;
+    font-family: 'Helvetica';
+    font-weight: 500;
+}
+
+header {
+    background-color: #1e2126;
+    height: 80px;
+    border-top: 5px solid #f80046;
+    color: #fff;
+    padding: 0 4em 0;
+}
+
+nav {
+    padding: 0 4em 0;
+}
+
+nav > ul.main {
+    padding-left: 0;
+    list-style: none;
+}
+
+.content {
+    padding: 1em 4em 0;
+}

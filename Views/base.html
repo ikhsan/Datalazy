@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Data Lazy</title>
+        <link rel="stylesheet" href="/app.css">
+    </head>
+
+    <body>
+        <header>
+            <h1>Datalazy{% block title %}{% endblock %}</h1>
+        </header>
+
+        <nav>
+            <ul class="main">
+                {% for link in links %}
+                <li /><a href="{{ link.path }}">{{ link.title }}</a>
+                {% endfor %}
+            </ul>
+        </nav>
+
+        <section class="content">
+            {% block content %}{% endblock %}
+        </section>
+    </body>
+</html>
