@@ -3,11 +3,12 @@
     <head>
         <title>Data Lazy</title>
         <link rel="stylesheet" href="/app.css">
+        <meta name="viewport" content="width=device-width" />
     </head>
 
     <body class="site">
         <header>
-            <h3 class="title">Datalazy</h3>
+            <h3 class="title">SK Datalazy</h3>
         </header>
         <div class="content">
             <nav>
@@ -19,7 +20,7 @@
                 </ul>
             </nav>
             <main>
-                <h2>{% block title %}{% endblock %}</h2>
+                <h2 class="title">{% block title %}{% endblock %}</h2>
                 <div>{% block content %}{% endblock %}</div>
             </main>
         </div>

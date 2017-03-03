@@ -3,6 +3,6 @@
 {% block title %}Yo{% endblock %}
 
 {% block content %}
-    <img src="/lazy.gif" />
+    <img src="/lazy.gif" style="max-width:500px; width:100%; height:auto" />
     <p>Which data are you too lazy to look for?</p>
 {% endblock %}

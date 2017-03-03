@@ -23,7 +23,6 @@ a:hover {
     text-decoration: underline;
 }
 
-
 .site {
     display: flex;
     min-height: 100vh;
@@ -39,7 +38,7 @@ header {
 }
 
 header .title {
-    padding: 1.5em 1.5em;
+    padding: 0.8em 1.5em 1em;
     margin: 0;
 }
 
@@ -47,8 +46,7 @@ header .title {
 
 .content {
     display: flex;
-    flex-direction: row;
-    flex: 1;
+    flex-direction: column;
 }
 
 .content > nav {
@@ -58,7 +56,12 @@ header .title {
 }
 
 .content > main {
+    padding: 0 1.5em;
     flex: 1;
+}
+
+.content > main .title {
+    margin-top: 0;
 }
 
 .content > nav > ul {
@@ -70,6 +73,18 @@ header .title {
 .content > nav > ul > li {
     padding-bottom: 0.5em;
 }
+
+@media screen and (min-width: 768px) {
+    .content {
+        flex: 1;
+        flex-direction: row;
+    }
+
+    .content > main .title {
+        margin-top: 0.83em;
+    }
+}
+
 
 
 /* -- Footer -- */
