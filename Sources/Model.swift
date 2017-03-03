@@ -12,11 +12,18 @@ struct Event {
         case cancelled
     }
 
+    enum `Type` : String {
+        case festival = "Festival"
+        case concert = "Concert"
+    }
+
     let id: Int
     let name: String
     let venue: String
     let status: Status
-    let date: Date?
+    let type: Type
+    let startDate: Date?
+    let endDate: Date?
     let url: URL?
 }
 
@@ -36,8 +43,22 @@ extension Event {
         let status = json["status"].stringValue
         self.status = Status(rawValue: status) ?? .ok
 
-        let date = json["start"]["date"].stringValue
-        self.date = Event.dateFormatter.date(from: date)
+        let type = json["type"].stringValue
+        self.type = Type(rawValue: type) ?? .concert
+
+        let startDate = json["start"]["date"].stringValue
+        self.startDate = Event.dateFormatter.date(from: startDate)
+
+        let endDate = json["end"]["date"].stringValue
+        self.endDate = Event.dateFormatter.date(from: endDate)
+    }
+
+    var toJSON: [String : Any] {
+        return [
+            "name" : name,
+            "url" : url?.absoluteString ?? "",
+            "status" : status.rawValue
+        ]
     }
 }
 
