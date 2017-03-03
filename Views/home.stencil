@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %} - Yo{% endblock %}
+{% block title %}Yo{% endblock %}
 
 {% block content %}
-    <h4>Yo, which data are you too lazy to look for? ^^</h4>
+    <img src="/lazy.gif" />
+    <p>Which data are you too lazy to look for?</p>
 {% endblock %}

@@ -17,6 +17,7 @@ router.add(templateEngine: StencilTemplateEngine())
 
 let mainLinks : [String : Any] = [
     "links" : [
+        Link(title: "Home", path: "/"),
         Link(title: "Cancelled Events", path: "/cancelled"),
         Link(title: "Multi-day Festivals", path: "/multiday_fest"),
         Link(title: "One day Festivals", path: "/oneday_fest"),

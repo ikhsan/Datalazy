@@ -5,21 +5,28 @@
         <link rel="stylesheet" href="/app.css">
     </head>
 
-    <body>
+    <body class="site">
         <header>
-            <h1>Datalazy{% block title %}{% endblock %}</h1>
+            <h3 class="title">Datalazy</h3>
         </header>
-
-        <nav>
-            <ul class="main">
-                {% for link in links %}
-                <li /><a href="{{ link.path }}">{{ link.title }}</a>
-                {% endfor %}
-            </ul>
-        </nav>
-
-        <section class="content">
-            {% block content %}{% endblock %}
-        </section>
+        <div class="content">
+            <nav>
+                <ul class="nav-list">
+                    <h3>Links for test data</h3>
+                    {% for link in links %}
+                    <li /><a href="{{ link.path }}">{{ link.title }}</a>
+                    {% endfor %}
+                </ul>
+            </nav>
+            <main>
+                <h2>{% block title %}{% endblock %}</h2>
+                <div>{% block content %}{% endblock %}</div>
+            </main>
+        </div>
+        <footer>
+            <p class="copyright">
+                <a href="https://ikhsan.me">ikhsan.me</a> &copy; 2017
+            </p>
+        </footer>
     </body>
 </html>
