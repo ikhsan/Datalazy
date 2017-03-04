@@ -8,12 +8,12 @@
 
     <body class="site">
         <header>
-            <h3 class="title">SK Datalazy</h3>
+            <h3 class="title"><a href="/">SK Datalazy</a></h3>
         </header>
         <div class="content">
             <nav>
                 <ul class="nav-list">
-                    <h3>Links for test data</h3>
+                    <h3>Data types</h3>
                     {% for link in links %}
                     <li /><a href="{{ link.path }}">{{ link.title }}</a>
                     {% endfor %}
@@ -26,7 +26,7 @@
         </div>
         <footer>
             <p class="copyright">
-                <a href="https://ikhsan.me">ikhsan.me</a> &copy; 2017
+                <a href="https://github.com/ikhsan/datalazy">Fork me</a> &copy; 2017
             </p>
         </footer>
     </body>
