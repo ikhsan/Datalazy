@@ -1,6 +1,6 @@
-FROM ibmcom/kitura-ubuntu
+FROM ibmcom/swift-ubuntu
 ADD . /Datalazy
 WORKDIR /Datalazy
-RUN swift build
+RUN swift build --configuration release
 EXPOSE 8080
-ENTRYPOINT [".build/debug/Datalazy"]
+ENTRYPOINT [".build/release/Datalazy"]
