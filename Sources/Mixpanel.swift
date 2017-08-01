@@ -28,13 +28,28 @@ class Mixpanel {
 
     }
 
-    func getFutureOnsaleEventIds(date: Date = Date(), limit: Int = 15) throws -> [Int] {
+    func getFutureOnsaleEventIds(date: Date = Date(), limit: Int = 20) throws -> [Int] {
         let dateString = Event.dateFormatter.string(from: date)
         let json = try fetch(path: "/events/properties/", params: [
             "from_date": dateString,
             "to_date": dateString,
             "event": "tap_button_notify_me - concert_details",
             "name": "event_id",
+            "type": "unique",
+            "unit": "day",
+        ])
+
+        let values = Array(json["data"]["values"].dictionaryValue.keys.prefix(limit))
+        return values.flatMap { Int($0) }
+    }
+
+    func getSKTicketEventIds(date: Date = Date(), limit: Int = 20) throws -> [Int] {
+        let dateString = Event.dateFormatter.string(from: date)
+        let json = try fetch(path: "/events/properties/", params: [
+            "from_date": dateString,
+            "to_date": dateString,
+            "event": "tap_button_SK_ticket_button - concert_details",
+            "name": "SK_event_id",
             "type": "unique",
             "unit": "day",
         ])

@@ -87,12 +87,24 @@ do {
     let futureOnsaleEventIds = try mixpanel.getFutureOnsaleEventIds()
     let futureEvents = try eventController.getEvents(ids: futureOnsaleEventIds)
 
-    router.get( EventLinks.futureOnsale.path ) { request, response, next in
+    router.get( TicketLinks.futureOnsale.path ) { request, response, next in
         let context : [String : Any] = [
-            "title": EventLinks.futureOnsale.title,
+            "title": TicketLinks.futureOnsale.title,
             "events": futureEvents,
         ]
         
+        try response.render("event_list.stencil", context: merge(context)).end()
+    }
+
+    let skTicketsIds = try mixpanel.getSKTicketEventIds()
+    let skTicketsEvents = try eventController.getEvents(ids: skTicketsIds)
+
+    router.get( TicketLinks.skTickets.path ) { request, response, next in
+        let context : [String : Any] = [
+            "title": TicketLinks.skTickets.title,
+            "events": skTicketsEvents,
+        ]
+
         try response.render("event_list.stencil", context: merge(context)).end()
     }
 
