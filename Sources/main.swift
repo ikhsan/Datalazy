@@ -4,7 +4,8 @@ import HeliumLogger
 import KituraStencil
 import LoggerAPI
 
-// MARK: Helpers
+// MARK: - Helpers
+
 func stringFromEnv(_ key: String) -> String? {
     return ProcessInfo.processInfo.environment[key]
 }
@@ -14,15 +15,18 @@ func intFromEnv(_ key: String) -> Int? {
     return Int(value)
 }
 
-// Artist list
+// MARK: - Artist list
+
 let artistList = [
     "longest": 3898176,
     "long": 2437841,
+    "long+punctuation": 4301,
     "weird": 213283,
     "weird2": 99207
 ]
 
-// MARK: Main app
+// MARK: - Main app
+
 do {
 
     HeliumLogger.use()
@@ -36,6 +40,7 @@ do {
 
     let mixpanel = try Mixpanel(apiSecret: stringFromEnv("MIXPANEL_API_SECRET"))
     let futureOnsaleEventIds = try mixpanel.getFutureOnsaleEventIds()
+    let futureEvents = try eventController.getEvents(ids: futureOnsaleEventIds)
 
     router.get( "/" ) { request, response, next in
         try response.render("home.stencil", context: merge([:])).end()
@@ -83,7 +88,7 @@ do {
     router.get( EventLinks.futureOnsale.path ) { request, response, next in
         let context : [String : Any] = [
             "title": EventLinks.futureOnsale.title,
-            "events": try eventController.getEvents(ids: futureOnsaleEventIds)
+            "events": futureEvents,
         ]
         
         try response.render("event_list.stencil", context: merge(context)).end()
@@ -94,7 +99,7 @@ do {
     router.get( ArtistLinks.all.path ) { request, response, next in
         let context : [String : Any] = [
             "title": ArtistLinks.all.title,
-            "artists": try artistController.getArtists()
+            "artists": try artistController.getArtists(),
         ]
 
         try response.render("artist_list.stencil", context: merge(context)).end()

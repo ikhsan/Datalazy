@@ -6,8 +6,8 @@
 
 {% block content %}
     <ul class="artist-list">
-        {% for artist in artists %}
-            <li>xxx</li>
+        {% for key,value in artists %}
+            <li>{{ key }} : <a href="{{ value.url }}">{{ value.name }}</a></li>
         {% endfor %}
     </ul>
 
