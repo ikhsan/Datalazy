@@ -38,14 +38,12 @@ do {
     let eventController = EventController()
     let artistController = ArtistController()
 
-    let mixpanel = try Mixpanel(apiSecret: stringFromEnv("MIXPANEL_API_SECRET"))
-    let futureOnsaleEventIds = try mixpanel.getFutureOnsaleEventIds()
-    let futureEvents = try eventController.getEvents(ids: futureOnsaleEventIds)
+    
+    // MARK: Populate data
 
     router.get( "/" ) { request, response, next in
         try response.render("home.stencil", context: merge([:])).end()
     }
-
 
     // MARK: Event Routes
 
@@ -85,6 +83,10 @@ do {
         try response.render("event_list.stencil", context: merge(context)).end()
     }
 
+    let mixpanel = try Mixpanel(apiSecret: stringFromEnv("MIXPANEL_API_SECRET"))
+    let futureOnsaleEventIds = try mixpanel.getFutureOnsaleEventIds()
+    let futureEvents = try eventController.getEvents(ids: futureOnsaleEventIds)
+
     router.get( EventLinks.futureOnsale.path ) { request, response, next in
         let context : [String : Any] = [
             "title": EventLinks.futureOnsale.title,
@@ -105,6 +107,45 @@ do {
         try response.render("artist_list.stencil", context: merge(context)).end()
     }
 
+    // MARK: Venue Routes
+
+    router.get( VenueLinks.unknownVenue.path ) { request, response, next in
+        let context : [String : Any] = [
+            "title": VenueLinks.thousandIsland.title,
+            "events": try eventController.getUnknownVenueEvents(),
+        ]
+        try response.render("event_list.stencil", context: merge(context)).end()
+    }
+
+    let thousandIslandEvents = try eventController.getEvents(venueId: 434301)
+
+    router.get( VenueLinks.thousandIsland.path ) { request, response, next in
+        let context : [String : Any] = [
+            "title": VenueLinks.thousandIsland.title,
+            "events": thousandIslandEvents,
+        ]
+        try response.render("event_list.stencil", context: merge(context)).end()
+    }
+
+    let axisEvents = try eventController.getEvents(venueId: 2502809)
+
+    router.get( VenueLinks.axis.path ) { request, response, next in
+        let context : [String : Any] = [
+            "title": VenueLinks.axis.title,
+            "events": axisEvents
+        ]
+        try response.render("event_list.stencil", context: merge(context)).end()
+    }
+
+    let salleEvents = try eventController.getEvents(venueId: 1405958)
+
+    router.get( VenueLinks.salle.path ) { request, response, next in
+        let context : [String : Any] = [
+            "title": VenueLinks.salle.title,
+            "events": salleEvents
+        ]
+        try response.render("event_list.stencil", context: merge(context)).end()
+    }
 
     // MARK: Start our engine!
     

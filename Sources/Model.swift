@@ -63,6 +63,7 @@ struct Event {
     let id: Int
     let name: String
     let venue: String
+    let venueId: Int
     let status: Status
     let type: Type
     let startDate: Date?
@@ -81,6 +82,7 @@ extension Event {
         self.id = json["id"].intValue
         self.name = json["displayName"].stringValue
         self.venue = json["venue"]["displayName"].stringValue
+        self.venueId = json["venue"]["id"].intValue
         self.url = URL(string: json["uri"].stringValue)
 
         let status = json["status"].stringValue

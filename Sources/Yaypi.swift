@@ -10,7 +10,7 @@ enum YaypiEndpoint {
     case londonConcerts
     case concert(id: Int)
     case artist(id: Int)
-
+    case concerts(venueId: Int)
 
     var raw: String {
         switch self {
@@ -24,6 +24,8 @@ enum YaypiEndpoint {
         case .artist(let id):
             return "artists/\(id).json"
 
+        case .concerts(let venueId):
+            return "venues/\(venueId)/calendar.json"
         }
     }
 

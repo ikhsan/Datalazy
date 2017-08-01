@@ -25,6 +25,12 @@ class EventController {
         return jsonEvents.map(Event.init(json:))
     }
 
+    private func fetchEvents(venueId: Int) throws -> [Event] {
+        let json = try api.fetch(endpoint: .concerts(venueId: venueId))
+        let jsonEvents = json["resultsPage"]["results"]["event"].arrayValue
+        return jsonEvents.map(Event.init(json:))
+    }
+
     private func fetchEvent(id: Int) throws -> Event {
         let eventExists = events.contains(where: { $0.id == id })
         guard !eventExists else { throw YaypiError.misc }
@@ -94,6 +100,24 @@ class EventController {
             .filter { ids.contains($0.id) }
             .map { $0.toJSON }
     }
+
+    // Venue related
+
+    func getEvents(venueId: Int) throws -> [JsonObject] {
+        let events = try fetchEvents(venueId: venueId)
+        addEvents(events)
+
+        return try getEvents()
+            .filter { $0.venueId == venueId }
+            .map { $0.toJSON }
+    }
+
+    func getUnknownVenueEvents() throws -> [JsonObject] {
+        return try getEvents()
+            .filter { $0.venueId == 0 }
+            .map { $0.toJSON }
+    }
+
 
 }
 
