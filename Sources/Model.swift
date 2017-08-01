@@ -62,3 +62,16 @@ extension Event {
     }
 }
 
+extension Event : Equatable {
+
+    static func ==(lhs: Event, rhs: Event) -> Bool {
+        guard lhs.id == rhs.id else { return false }
+        guard lhs.name == rhs.name else { return false }
+        guard lhs.venue == rhs.venue else { return false }
+        guard lhs.status == rhs.status else { return false }
+        guard lhs.type == rhs.type else { return false }
+
+        return true
+    }
+
+}

@@ -12,6 +12,9 @@ class EventController {
     private let isMultiDay: (Event) -> Bool = { $0.startDate != $0.endDate }
     private let isSingleDay: (Event) -> Bool = { $0.startDate == $0.endDate }
 
+    init() {
+        _ = try? getEvents()
+    }
 
     private func fetchEvents(page: Int) throws -> [Event] {
         let json = try api.fetch(endpoint: .londonConcerts, page: page)
@@ -45,11 +48,7 @@ class EventController {
     }
 
     private func addEvents(_ newEvents: [Event]) {
-        let result = newEvents.filter { event in
-            let ids = self.events.map({ $0.id })
-            return ids.contains(event.id)
-        }
-
+        let result = newEvents.filter { !self.events.contains($0) }
         events.append(contentsOf: result)
     }
 
@@ -81,9 +80,14 @@ class EventController {
     }
 
     func getEvents(ids: [Int]) throws -> [JsonObject] {
-        let events = ids.flatMap { try? fetchEvent(id: $0) }
+        let availableIds = self.events.map({ $0.id })
+        let idsToFetch = ids.filter({ !availableIds.contains($0) })
 
-        return events
+        let events = idsToFetch.flatMap { try? fetchEvent(id: $0) }
+        addEvents(events)
+
+        return try getEvents()
+            .filter { ids.contains($0.id) }
             .map { $0.toJSON }
     }
 

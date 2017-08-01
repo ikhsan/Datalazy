@@ -25,6 +25,7 @@ do {
 
     let controller = EventController()
     let mixpanel = try Mixpanel(apiSecret: stringFromEnv("MIXPANEL_API_SECRET"))
+    let futureOnsaleEventIds = try mixpanel.getFutureOnsaleEventIds()
 
     router.get( "/" ) { request, response, next in
         try response.render("home.stencil", context: merge([:])).end()
@@ -67,13 +68,9 @@ do {
     }
 
     router.get( EventLinks.futureOnsale.path ) { request, response, next in
-
-        let ids = try mixpanel.getFutureOnsaleEventIds()
-        let events = try controller.getEvents(ids: ids)
-
         let context : [String : Any] = [
             "title": EventLinks.futureOnsale.title,
-            "events": events
+            "events": try controller.getEvents(ids: futureOnsaleEventIds)
         ]
         
         try response.render("event_list.stencil", context: merge(context)).end()
@@ -82,9 +79,6 @@ do {
     let port = intFromEnv("PORT") ?? 8080
     Kitura.addHTTPServer(onPort: port, with: router)
     Kitura.run()
-
-//    let events = try controller.getEvents(ids: [ 29427274, 30796314 ])
-//    print("~~~~> " + String(describing: events))
 
 } catch {
     fatalError("😵 dead 😵")

@@ -28,8 +28,7 @@ class Mixpanel {
 
     }
 
-
-    func getFutureOnsaleEventIds(date: Date = Date(), limit: Int = 10) throws -> [Int] {
+    func getFutureOnsaleEventIds(date: Date = Date(), limit: Int = 15) throws -> [Int] {
         let dateString = Event.dateFormatter.string(from: date)
         let json = try fetch(path: "/events/properties/", params: [
             "from_date": dateString,
