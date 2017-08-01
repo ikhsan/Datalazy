@@ -14,6 +14,14 @@ func intFromEnv(_ key: String) -> Int? {
     return Int(value)
 }
 
+// Artist list
+let artistList = [
+    "longest": 3898176,
+    "long": 2437841,
+    "weird": 213283,
+    "weird2": 99207
+]
+
 // MARK: Main app
 do {
 
@@ -23,7 +31,9 @@ do {
     router.all("/", middleware: StaticFileServer())
     router.add(templateEngine: StencilTemplateEngine())
 
-    let controller = EventController()
+    let eventController = EventController()
+    let artistController = ArtistController()
+
     let mixpanel = try Mixpanel(apiSecret: stringFromEnv("MIXPANEL_API_SECRET"))
     let futureOnsaleEventIds = try mixpanel.getFutureOnsaleEventIds()
 
@@ -37,7 +47,7 @@ do {
     router.get( EventLinks.all.path ) { request, response, next in
         let context : [String : Any] = [
             "title": EventLinks.all.title,
-            "events": try controller.getAll()
+            "events": try eventController.getAll()
         ]
 
         try response.render("event_list.stencil", context: merge(context)).end()
@@ -46,7 +56,7 @@ do {
     router.get( EventLinks.cancelled.path ) { request, response, next in
         let context : [String : Any] = [
             "title": EventLinks.cancelled.title,
-            "events": try controller.getCancelledEvents()
+            "events": try eventController.getCancelledEvents()
         ]
 
         try response.render("event_list.stencil", context: merge(context)).end()
@@ -55,7 +65,7 @@ do {
     router.get( EventLinks.multiDay.path ) { request, response, next in
         let context : [String : Any] = [
             "title": EventLinks.multiDay.title,
-            "events": try controller.getMultidayFestivals()
+            "events": try eventController.getMultidayFestivals()
         ]
 
         try response.render("event_list.stencil", context: merge(context)).end()
@@ -64,7 +74,7 @@ do {
     router.get( EventLinks.oneDay.path ) { request, response, next in
         let context : [String : Any] = [
             "title": EventLinks.oneDay.title,
-            "events": try controller.getSingleDayFestivals()
+            "events": try eventController.getSingleDayFestivals()
         ]
 
         try response.render("event_list.stencil", context: merge(context)).end()
@@ -73,13 +83,23 @@ do {
     router.get( EventLinks.futureOnsale.path ) { request, response, next in
         let context : [String : Any] = [
             "title": EventLinks.futureOnsale.title,
-            "events": try controller.getEvents(ids: futureOnsaleEventIds)
+            "events": try eventController.getEvents(ids: futureOnsaleEventIds)
         ]
         
         try response.render("event_list.stencil", context: merge(context)).end()
     }
 
     // MARK: Artists Routes
+
+    router.get( ArtistLinks.all.path ) { request, response, next in
+        let context : [String : Any] = [
+            "title": ArtistLinks.all.title,
+            "artists": try artistController.getArtists()
+        ]
+
+        try response.render("artist_list.stencil", context: merge(context)).end()
+    }
+
 
     // MARK: Start our engine!
     

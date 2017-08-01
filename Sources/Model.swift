@@ -1,15 +1,28 @@
 import Foundation
 import SwiftyJSON
 
+// MARK: - Link
+
 struct Link {
     let title: String
     let path: String
 }
 
+// MARK: - Artist
+
 struct Artist {
     let id: Int
     let name: String
     let url: URL?
+}
+
+extension Artist {
+
+    init(json: JSON) {
+        self.id = json["id"].intValue
+        self.name = json["displayName"].stringValue
+        self.url = URL(string: json["uri"].stringValue)
+    }
 
     var toJSON: [String : Any] {
         return [
@@ -18,6 +31,7 @@ struct Artist {
             "url" : url?.absoluteString ?? ""
         ]
     }
+
 }
 
 extension Artist : Equatable {
@@ -32,6 +46,8 @@ extension Artist : Equatable {
 
 
 }
+
+// MARK: - Event
 
 struct Event {
     enum Status : String {

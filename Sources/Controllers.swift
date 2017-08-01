@@ -3,9 +3,10 @@ import LoggerAPI
 
 typealias JsonObject = [String : Any]
 
+fileprivate let api = Yaypi()
+
 class EventController {
 
-    private let api = Yaypi()
     private var events: [Event] = []
 
     private let hasUrl: (Event) -> Bool = { $0.url != nil }
@@ -98,25 +99,41 @@ class EventController {
 
 
 class ArtistController {
-    private let list = [
-        "longest": 3898176,
-        "long": 2437841,
-        "weird": 213283,
-        "weird2": 99207
-    ]
 
     private var artists: [String: Artist] = [:]
+
+    private func fetchArtist(id: Int) throws -> Artist {
+        let json = try api.fetch(endpoint: .artist(id: id))
+        let artistJson = json["resultsPage"]["results"]["artist"]
+
+        return Artist(json: artistJson)
+    }
 
     init() {
         try? populateArtists()
     }
 
     private func populateArtists() throws {
+        self.artists = artistList.reduce([String: Artist](), { (memo, keyValue) -> [String: Artist] in
+            var result = memo
 
+            let key = keyValue.key
+            let artistId = keyValue.value
+
+            if let artist = try? fetchArtist(id: artistId) {
+                result[key] = artist
+            }
+
+            return result
+        })
     }
 
-    func getArtists() -> [JsonObject] {
-        return []
+    func getArtists() throws -> [String : JsonObject] {
+        return artists.reduce([String : JsonObject]()) { (memo, keyValue) -> [String : JsonObject] in
+            var result = memo
+            result[keyValue.key] = keyValue.value.toJSON
+            return result
+        }
     }
 
 }

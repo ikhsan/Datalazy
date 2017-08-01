@@ -9,6 +9,7 @@ enum YaypiError : Error {
 enum YaypiEndpoint {
     case londonConcerts
     case concert(id: Int)
+    case artist(id: Int)
 
 
     var raw: String {
@@ -19,6 +20,9 @@ enum YaypiEndpoint {
 
         case .concert(let id):
             return "events/\(id).json"
+
+        case .artist(let id):
+            return "artists/\(id).json"
 
         }
     }
