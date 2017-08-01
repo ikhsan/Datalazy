@@ -14,9 +14,11 @@
         <div class="content">
             <nav>
                 <ul class="nav-list">
-                    <h3>Links</h3>
-                    {% for link in links %}
-                    <li /><a href="{{ link.path }}">{{ link.title }}</a>
+                    {% for key,value in links %}
+                        <h3>{{ key }}</h3>
+                        {% for link in value %}
+                            <li /><a href="{{ link.path }}">{{ link.title }}</a>
+                        {% endfor %}
                     {% endfor %}
                 </ul>
             </nav>

@@ -18,7 +18,10 @@ struct ArtistLinks {
 
 func merge(_ localContext: [String : Any]) -> [String : Any] {
     var context : [String : Any] = [
-        "links" : EventLinks.links + ArtistLinks.links
+        "links" : [
+            "Events" : EventLinks.links,
+            "Artists" : ArtistLinks.links,
+        ]
     ]
     localContext.forEach { context.updateValue($1, forKey: $0) }
     return context
