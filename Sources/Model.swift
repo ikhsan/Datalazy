@@ -6,6 +6,33 @@ struct Link {
     let path: String
 }
 
+struct Artist {
+    let id: Int
+    let name: String
+    let url: URL?
+
+    var toJSON: [String : Any] {
+        return [
+            "id" : id,
+            "name" : name,
+            "url" : url?.absoluteString ?? ""
+        ]
+    }
+}
+
+extension Artist : Equatable {
+
+    static func ==(lhs: Artist, rhs: Artist) -> Bool {
+        guard lhs.id == rhs.id else { return false }
+        guard lhs.name == rhs.name else { return false }
+        guard lhs.url == rhs.url else { return false }
+
+        return true
+    }
+
+
+}
+
 struct Event {
     enum Status : String {
         case ok

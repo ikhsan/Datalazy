@@ -26,11 +26,13 @@ do {
     let controller = EventController()
     let mixpanel = try Mixpanel(apiSecret: stringFromEnv("MIXPANEL_API_SECRET"))
     let futureOnsaleEventIds = try mixpanel.getFutureOnsaleEventIds()
-    Log.verbose("Future onsale event ids : " + String(describing: futureOnsaleEventIds))
 
     router.get( "/" ) { request, response, next in
         try response.render("home.stencil", context: merge([:])).end()
     }
+
+
+    // MARK: Event Routes
 
     router.get( EventLinks.all.path ) { request, response, next in
         let context : [String : Any] = [
@@ -76,6 +78,10 @@ do {
         
         try response.render("event_list.stencil", context: merge(context)).end()
     }
+
+    // MARK: Artists Routes
+
+    // MARK: Start our engine!
     
     let port = intFromEnv("PORT") ?? 8080
     Kitura.addHTTPServer(onPort: port, with: router)

@@ -55,7 +55,8 @@ class EventController {
     }
 
     func getAll() throws -> [JsonObject] {
-        return try getEvents().map { $0.toJSON }
+        return try getEvents()
+            .map { $0.toJSON }
     }
 
     func getCancelledEvents() throws -> [JsonObject] {
@@ -85,8 +86,6 @@ class EventController {
         let availableIds = self.events.map({ $0.id })
         let idsToFetch = ids.filter({ !availableIds.contains($0) })
 
-        Log.verbose("Ids to fetch : " + String(describing: idsToFetch))
-
         let events = idsToFetch.flatMap { try? fetchEvent(id: $0) }
         addEvents(events)
 
@@ -96,3 +95,31 @@ class EventController {
     }
 
 }
+
+
+class ArtistController {
+    private let list = [
+        "longest": 3898176,
+        "long": 2437841,
+        "weird": 213283,
+        "weird2": 99207
+    ]
+
+    private var artists: [String: Artist] = [:]
+
+    init() {
+        try? populateArtists()
+    }
+
+    private func populateArtists() throws {
+
+    }
+
+    func getArtists() -> [JsonObject] {
+        return []
+    }
+
+}
+
+
+
