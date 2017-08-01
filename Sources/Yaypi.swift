@@ -3,10 +3,26 @@ import SwiftyJSON
 
 enum YaypiError : Error {
     case pathError
+    case misc
 }
 
-enum YaypiEndpoint : String {
-    case londonConcerts = "metro_areas/24426/calendar.json"
+enum YaypiEndpoint {
+    case londonConcerts
+    case concert(id: Int)
+
+
+    var raw: String {
+        switch self {
+
+        case .londonConcerts:
+            return "metro_areas/24426/calendar.json"
+
+        case .concert(let id):
+            return "events/\(id).json"
+
+        }
+    }
+
 }
 
 struct Yaypi {
@@ -15,7 +31,7 @@ struct Yaypi {
     let apikey = "HkJnN1KOw3jAKDLL"
 
     func fetch(endpoint: YaypiEndpoint, page: Int = 1) throws -> JSON {
-        guard var components = URLComponents(string: baseUrl + endpoint.rawValue) else {
+        guard var components = URLComponents(string: baseUrl + endpoint.raw) else {
             throw YaypiError.pathError
         }
 

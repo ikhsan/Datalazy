@@ -12,10 +12,21 @@ class EventController {
     private let isMultiDay: (Event) -> Bool = { $0.startDate != $0.endDate }
     private let isSingleDay: (Event) -> Bool = { $0.startDate == $0.endDate }
 
+
     private func fetchEvents(page: Int) throws -> [Event] {
         let json = try api.fetch(endpoint: .londonConcerts, page: page)
         let jsonEvents = json["resultsPage"]["results"]["event"].arrayValue
         return jsonEvents.map(Event.init(json:))
+    }
+
+    private func fetchEvent(id: Int) throws -> Event {
+        let eventExists = events.contains(where: { $0.id == id })
+        guard !eventExists else { throw YaypiError.misc }
+
+        let json = try api.fetch(endpoint: .concert(id: id))
+        let eventJson = json["resultsPage"]["results"]["event"]
+
+        return Event(json: eventJson)
     }
 
     private func getEvents() throws -> [Event] {
@@ -31,6 +42,15 @@ class EventController {
         }
 
         return events
+    }
+
+    private func addEvents(_ newEvents: [Event]) {
+        let result = newEvents.filter { event in
+            let ids = self.events.map({ $0.id })
+            return ids.contains(event.id)
+        }
+
+        events.append(contentsOf: result)
     }
 
     func getAll() throws -> [JsonObject] {
@@ -57,6 +77,13 @@ class EventController {
             .filter(hasUrl)
             .filter(isFestival)
             .filter(isMultiDay)
+            .map { $0.toJSON }
+    }
+
+    func getEvents(ids: [Int]) throws -> [JsonObject] {
+        let events = ids.flatMap { try? fetchEvent(id: $0) }
+
+        return events
             .map { $0.toJSON }
     }
 

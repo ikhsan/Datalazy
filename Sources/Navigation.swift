@@ -5,8 +5,9 @@ struct EventLinks {
     static let cancelled = Link(title: "Cancelled Events", path: "/cancelled")
     static let multiDay = Link(title: "Multi-day Festivals", path: "/multiday_fest")
     static let oneDay = Link(title: "One day Festivals", path: "/oneday_fest")
+    static let futureOnsale = Link(title: "Future Onsale", path: "/future_onsale")
 
-    static let links: [Link] = [ all, cancelled, multiDay, oneDay ]
+    static let links: [Link] = [ all, cancelled, multiDay, oneDay, futureOnsale ]
 }
 
 func merge(_ localContext: [String : Any]) -> [String : Any] {
