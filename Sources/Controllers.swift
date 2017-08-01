@@ -1,3 +1,5 @@
+import HeliumLogger
+import LoggerAPI
 
 typealias JsonObject = [String : Any]
 
@@ -82,6 +84,8 @@ class EventController {
     func getEvents(ids: [Int]) throws -> [JsonObject] {
         let availableIds = self.events.map({ $0.id })
         let idsToFetch = ids.filter({ !availableIds.contains($0) })
+
+        Log.verbose("Ids to fetch : " + String(describing: idsToFetch))
 
         let events = idsToFetch.flatMap { try? fetchEvent(id: $0) }
         addEvents(events)

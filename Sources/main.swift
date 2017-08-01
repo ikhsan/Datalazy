@@ -26,6 +26,7 @@ do {
     let controller = EventController()
     let mixpanel = try Mixpanel(apiSecret: stringFromEnv("MIXPANEL_API_SECRET"))
     let futureOnsaleEventIds = try mixpanel.getFutureOnsaleEventIds()
+    Log.verbose("Future onsale event ids : " + String(describing: futureOnsaleEventIds))
 
     router.get( "/" ) { request, response, next in
         try response.render("home.stencil", context: merge([:])).end()
