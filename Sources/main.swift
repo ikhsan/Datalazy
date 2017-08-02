@@ -41,123 +41,94 @@ do {
     
     // MARK: Populate data
 
-    router.get( "/" ) { request, response, next in
-        try response.render("home.stencil", context: merge([:])).end()
-    }
-
-    // MARK: Event Routes
-
-    router.get( EventLinks.all.path ) { request, response, next in
-        let context : [String : Any] = [
-            "title": EventLinks.all.title,
-            "events": try eventController.getAll()
-        ]
-
-        try response.render("event_list.stencil", context: merge(context)).end()
-    }
-
-    router.get( EventLinks.cancelled.path ) { request, response, next in
-        let context : [String : Any] = [
-            "title": EventLinks.cancelled.title,
-            "events": try eventController.getCancelledEvents()
-        ]
-
-        try response.render("event_list.stencil", context: merge(context)).end()
-    }
-
-    router.get( EventLinks.multiDay.path ) { request, response, next in
-        let context : [String : Any] = [
-            "title": EventLinks.multiDay.title,
-            "events": try eventController.getMultidayFestivals()
-        ]
-
-        try response.render("event_list.stencil", context: merge(context)).end()
-    }
-
-    router.get( EventLinks.oneDay.path ) { request, response, next in
-        let context : [String : Any] = [
-            "title": EventLinks.oneDay.title,
-            "events": try eventController.getSingleDayFestivals()
-        ]
-
-        try response.render("event_list.stencil", context: merge(context)).end()
-    }
-
     let mixpanel = try Mixpanel(apiSecret: stringFromEnv("MIXPANEL_API_SECRET"))
     let futureOnsaleEventIds = try mixpanel.getFutureOnsaleEventIds()
     let futureEvents = try eventController.getEvents(ids: futureOnsaleEventIds)
 
-    router.get( TicketLinks.futureOnsale.path ) { request, response, next in
-        let context : [String : Any] = [
-            "title": TicketLinks.futureOnsale.title,
-            "events": futureEvents,
-        ]
-        
-        try response.render("event_list.stencil", context: merge(context)).end()
-    }
-
     let skTicketsIds = try mixpanel.getSKTicketEventIds()
     let skTicketsEvents = try eventController.getEvents(ids: skTicketsIds)
 
-    router.get( TicketLinks.skTickets.path ) { request, response, next in
-        let context : [String : Any] = [
-            "title": TicketLinks.skTickets.title,
-            "events": skTicketsEvents,
-        ]
-
-        try response.render("event_list.stencil", context: merge(context)).end()
-    }
-
-    // MARK: Artists Routes
-
-    router.get( ArtistLinks.all.path ) { request, response, next in
-        let context : [String : Any] = [
-            "title": ArtistLinks.all.title,
-            "artists": try artistController.getArtists(),
-        ]
-
-        try response.render("artist_list.stencil", context: merge(context)).end()
-    }
-
-    // MARK: Venue Routes
-
-    router.get( VenueLinks.unknownVenue.path ) { request, response, next in
-        let context : [String : Any] = [
-            "title": VenueLinks.thousandIsland.title,
-            "events": try eventController.getUnknownVenueEvents(),
-        ]
-        try response.render("event_list.stencil", context: merge(context)).end()
-    }
-
     let thousandIslandEvents = try eventController.getEvents(venueId: 434301)
-
-    router.get( VenueLinks.thousandIsland.path ) { request, response, next in
-        let context : [String : Any] = [
-            "title": VenueLinks.thousandIsland.title,
-            "events": thousandIslandEvents,
-        ]
-        try response.render("event_list.stencil", context: merge(context)).end()
-    }
-
     let axisEvents = try eventController.getEvents(venueId: 2502809)
 
-    router.get( VenueLinks.axis.path ) { request, response, next in
-        let context : [String : Any] = [
-            "title": VenueLinks.axis.title,
-            "events": axisEvents
-        ]
-        try response.render("event_list.stencil", context: merge(context)).end()
+    // MARK: Event Routes
+
+    struct Route {
+        let link: Link
+        let template: String
+        let context: [String : Any]
     }
 
-    let salleEvents = try eventController.getEvents(venueId: 1405958)
+    func registerRoutes(_ routes: [Route])  {
+        for aRoute in routes {
 
-    router.get( VenueLinks.salle.path ) { request, response, next in
-        let context : [String : Any] = [
-            "title": VenueLinks.salle.title,
-            "events": salleEvents
-        ]
-        try response.render("event_list.stencil", context: merge(context)).end()
+            router.get(aRoute.link.path) { request, response, next in
+                var context = aRoute.context
+                context["title"] = aRoute.link.title
+                try response.render(aRoute.template, context: merge(context)).end()
+            }
+
+        }
     }
+
+    registerRoutes([
+
+        Route(
+            link: Link(title: "Home", path: "/"),
+            template: "home.stencil",
+            context: [:]
+        ),
+
+        // MARK: - Events
+
+        Route(link: EventLinks.all, template: "event_list.stencil", context: [
+            "events" : try eventController.getAll()
+        ]),
+
+        Route(link: EventLinks.cancelled, template: "event_list.stencil", context: [
+            "events" : try eventController.getCancelledEvents()
+        ]),
+
+        Route(link: EventLinks.multiDay, template: "event_list.stencil", context: [
+            "events" : try eventController.getMultidayFestivals()
+        ]),
+
+        Route(link: EventLinks.oneDay, template: "event_list.stencil", context: [
+            "events" : try eventController.getSingleDayFestivals()
+        ]),
+
+        // MARK: - Tickets
+
+        Route(link: TicketLinks.futureOnsale, template: "event_list.stencil", context: [
+            "events" : futureEvents
+        ]),
+
+        Route(link: TicketLinks.skTickets, template: "event_list.stencil", context: [
+            "events" : skTicketsEvents
+        ]),
+
+        // MARK: - Artists
+
+        Route(link: ArtistLinks.all, template: "artist_list.stencil", context: [
+            "artists" : try artistController.getArtists()
+        ]),
+
+        // MARK: - Venues
+
+        Route(link: VenueLinks.thousandIsland, template: "event_list.stencil", context: [
+            "events" : thousandIslandEvents
+        ]),
+
+        Route(link: VenueLinks.axis, template: "event_list.stencil", context: [
+            "events" : axisEvents
+        ]),
+
+        Route(link: VenueLinks.unknownVenue, template: "event_list.stencil", context: [
+            "events" : try eventController.getUnknownVenueEvents()
+        ]),
+
+    ])
+
 
     // MARK: Start our engine!
     

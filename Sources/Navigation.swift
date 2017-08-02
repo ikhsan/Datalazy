@@ -18,10 +18,9 @@ struct ArtistLinks {
 struct VenueLinks {
     static let thousandIsland = Link(title: "Thousand Island", path: "/venue/1000-island")
     static let axis = Link(title: "Axis Planet Hollywood", path: "/venue/axis-planet-hollywood")
-    static let salle = Link(title: "Salle de Concert", path: "/venue/salle-de-concert")
-    static let unknownVenue = Link(title: "Unknown Venue", path: "/event/unknown-venue")
+    static let unknownVenue = Link(title: "Unknown Venue", path: "/venue/unknown-venue")
 
-    static let links = [ thousandIsland, axis, salle, unknownVenue ]
+    static let links = [ thousandIsland, axis, unknownVenue ]
 }
 
 struct TicketLinks {
